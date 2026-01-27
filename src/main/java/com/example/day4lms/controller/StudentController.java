@@ -1,11 +1,45 @@
 package com.example.day4lms.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.day4lms.model.StudentModel;
+import com.example.day4lms.service.StudentService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class StudentController {
+
     @GetMapping("/")
+    public String l() {
+        return "hi there.";
+    }
 
+    private final StudentService service;
 
+    public StudentController(StudentService service) {
+        this.service = service;
+    }
+
+    @PostMapping("/add-student")
+    public StudentModel addStart(@RequestBody StudentModel student) {
+        return service.addStudent(student);
+    }
+
+    // Display Student
+    @GetMapping("/students")
+    public List<StudentModel> getStudents() {
+        return service.getStudents();
+    }
+
+    // update Student
+    @PutMapping("/update/{id}")
+    public StudentModel updateStudent(@PathVariable String id, @RequestBody StudentModel student) {
+        return service.updateStudents(id, student);
+    }
+
+    // Delete Student
+    @DeleteMapping("/delete/{id}")
+    public StudentModel deleteStudent(@PathVariable String id, @RequestBody StudentModel student) {
+        return service.deleteStudents(id, student);
+    }
 }
