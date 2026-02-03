@@ -1,7 +1,10 @@
 package com.example.day4lms.controller;
 
+import com.example.day4lms.dto.StudentRequestDto;
+import com.example.day4lms.dto.StudentResponseDto;
 import com.example.day4lms.model.StudentModel;
 import com.example.day4lms.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +24,7 @@ public class StudentController {
     }
 
     @PostMapping("/add-student")
-    public StudentModel addStart(@RequestBody StudentModel student) {
+    public StudentResponseDto addStart(@Valid @RequestBody StudentRequestDto student) {
         return service.addStudent(student);
     }
 
