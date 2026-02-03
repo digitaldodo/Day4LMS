@@ -43,27 +43,31 @@ public class StudentService {
                 savedStudent.getEmail());
     }
 
-    // Display Student
-    public List<StudentModel> getStudents() {
-        return repository.findAll();
-    }
-
     // update
-    public StudentModel updateStudents(String id, StudentModel student) {
+    public StudentResponseDto updateStudent(String id, StudentRequestDto dto) {
         StudentModel existingStudent = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No Student Found"));
-        existingStudent.setName(student.getName());
-        existingStudent.setAge(student.getAge());
-        existingStudent.setEmail(student.getEmail());
+        existingStudent.setName(dto.getName());
+        existingStudent.setAge(dto.getAge());
+        existingStudent.setEmail(dto.getEmail());
 
-        return repository.save(existingStudent);
+        StudentModel savedStudent = repository.save(existingStudent);
+        return new StudentResponseDto(
+                savedStudent.getId(),
+                savedStudent.getName(),
+                savedStudent.getAge(),
+                savedStudent.getEmail());
     }
 
     // Delete
-    public StudentModel deleteStudents(String id, StudentModel student) {
+    public StudentResponseDto deleteStudent(String id) {
         StudentModel existingStudent = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No Student Found"));
         repository.delete(existingStudent);
-        return existingStudent;
+        return new StudentResponseDto(
+                existingStudent.getId(),
+                existingStudent.getName(),
+                existingStudent.getAge(),
+                existingStudent.getEmail());
     }
 }

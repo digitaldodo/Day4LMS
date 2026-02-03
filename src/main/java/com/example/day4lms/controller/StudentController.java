@@ -2,7 +2,6 @@ package com.example.day4lms.controller;
 
 import com.example.day4lms.dto.StudentRequestDto;
 import com.example.day4lms.dto.StudentResponseDto;
-import com.example.day4lms.model.StudentModel;
 import com.example.day4lms.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -30,19 +29,19 @@ public class StudentController {
 
     // Display Student
     @GetMapping("/students")
-    public List<StudentModel> getStudents() {
-        return service.getStudents();
+    public List<StudentResponseDto> getStudents() {
+        return service.getAllStudents();
     }
 
     // update Student
     @PutMapping("/update/{id}")
-    public StudentModel updateStudent(@PathVariable String id, @RequestBody StudentModel student) {
-        return service.updateStudents(id, student);
+    public StudentResponseDto updateStudent(@PathVariable String id, @Valid @RequestBody StudentRequestDto student) {
+        return service.updateStudent(id, student);
     }
 
     // Delete Student
     @DeleteMapping("/delete/{id}")
-    public StudentModel deleteStudent(@PathVariable String id, @RequestBody StudentModel student) {
-        return service.deleteStudents(id, student);
+    public StudentResponseDto deleteStudent(@PathVariable String id) {
+        return service.deleteStudent(id);
     }
 }
