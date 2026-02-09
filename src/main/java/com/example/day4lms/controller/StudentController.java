@@ -44,4 +44,10 @@ public class StudentController {
     public StudentResponseDto deleteStudent(@PathVariable String id) {
         return service.deleteStudent(id);
     }
+
+    // Partial Update Student (PATCH)
+    @PatchMapping("/patch/{id}")
+    public StudentResponseDto patchStudent(@PathVariable String id, @RequestBody StudentRequestDto student) {
+        return service.patchStudent(id, student);
+    }
 }

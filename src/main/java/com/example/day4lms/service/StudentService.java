@@ -11,63 +11,87 @@ import java.util.List;
 
 @Service
 public class StudentService {
-    public List<StudentResponseDto> getAllStudents() {
-        return repository.findAll()
-                .stream()
-                .map(s -> new StudentResponseDto(
-                        s.getId(),
-                        s.getName(),
-                        s.getAge(),
-                        s.getEmail()))
-                .toList();
-    }
+        public List<StudentResponseDto> getAllStudents() {
+                return repository.findAll()
+                                .stream()
+                                .map(s -> new StudentResponseDto(
+                                                s.getId(),
+                                                s.getName(),
+                                                s.getAge(),
+                                                s.getEmail()))
+                                .toList();
+        }
 
-    private StudentRepository repository;
+        private StudentRepository repository;
 
-    public StudentService(StudentRepository repository) {
-        this.repository = repository;
-    }
+        public StudentService(StudentRepository repository) {
+                this.repository = repository;
+        }
 
-    public StudentResponseDto addStudent(StudentRequestDto dto) {
-        StudentModel student = new StudentModel();
-        student.setName(dto.getName());
-        student.setAge(dto.getAge());
-        student.setEmail(dto.getEmail());
+        public StudentResponseDto addStudent(StudentRequestDto dto) {
+                StudentModel student = new StudentModel();
+                student.setName(dto.getName());
+                student.setAge(dto.getAge());
+                student.setEmail(dto.getEmail());
 
-        StudentModel savedStudent = repository.save(student);
+                StudentModel savedStudent = repository.save(student);
 
-        return new StudentResponseDto(
-                savedStudent.getId(),
-                savedStudent.getName(),
-                savedStudent.getAge(),
-                savedStudent.getEmail());
-    }
+                return new StudentResponseDto(
+                                savedStudent.getId(),
+                                savedStudent.getName(),
+                                savedStudent.getAge(),
+                                savedStudent.getEmail());
+        }
 
-    // update
-    public StudentResponseDto updateStudent(String id, StudentRequestDto dto) {
-        StudentModel existingStudent = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No Student Found"));
-        existingStudent.setName(dto.getName());
-        existingStudent.setAge(dto.getAge());
-        existingStudent.setEmail(dto.getEmail());
+        // update
+        public StudentResponseDto updateStudent(String id, StudentRequestDto dto) {
+                StudentModel existingStudent = repository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("No Student Found"));
+                existingStudent.setName(dto.getName());
+                existingStudent.setAge(dto.getAge());
+                existingStudent.setEmail(dto.getEmail());
 
-        StudentModel savedStudent = repository.save(existingStudent);
-        return new StudentResponseDto(
-                savedStudent.getId(),
-                savedStudent.getName(),
-                savedStudent.getAge(),
-                savedStudent.getEmail());
-    }
+                StudentModel savedStudent = repository.save(existingStudent);
+                return new StudentResponseDto(
+                                savedStudent.getId(),
+                                savedStudent.getName(),
+                                savedStudent.getAge(),
+                                savedStudent.getEmail());
+        }
 
-    // Delete
-    public StudentResponseDto deleteStudent(String id) {
-        StudentModel existingStudent = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No Student Found"));
-        repository.delete(existingStudent);
-        return new StudentResponseDto(
-                existingStudent.getId(),
-                existingStudent.getName(),
-                existingStudent.getAge(),
-                existingStudent.getEmail());
-    }
+        // Delete
+        public StudentResponseDto deleteStudent(String id) {
+                StudentModel existingStudent = repository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("No Student Found"));
+                repository.delete(existingStudent);
+                return new StudentResponseDto(
+                                existingStudent.getId(),
+                                existingStudent.getName(),
+                                existingStudent.getAge(),
+                                existingStudent.getEmail());
+        }
+
+        // Partial Update (PATCH) - only updates non-null fields
+        public StudentResponseDto patchStudent(String id, StudentRequestDto dto) {
+                StudentModel existingStudent = repository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("No Student Found"));
+
+                // Only update fields that are provided (not null)
+                if (dto.getName() != null) {
+                        existingStudent.setName(dto.getName());
+                }
+                if (dto.getAge() != null) {
+                        existingStudent.setAge(dto.getAge());
+                }
+                if (dto.getEmail() != null) {
+                        existingStudent.setEmail(dto.getEmail());
+                }
+
+                StudentModel savedStudent = repository.save(existingStudent);
+                return new StudentResponseDto(
+                                savedStudent.getId(),
+                                savedStudent.getName(),
+                                savedStudent.getAge(),
+                                savedStudent.getEmail());
+        }
 }
